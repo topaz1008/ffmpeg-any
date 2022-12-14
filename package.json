@@ -1,0 +1,22 @@
+{
+    "name": "ffmpeg-any",
+    "version": "0.0.1",
+    "type": "module",
+    "author": {
+        "name": "Topaz Bar",
+        "email": "topaz1008@gmail.com"
+    },
+    "keywords": [
+        "ffmpeg",
+        "batch",
+        "video",
+        "tools"
+    ],
+    "dependencies": {
+        "chalk": "^5.2.0",
+        "minimist": "^1.2.7"
+    },
+    "bin": {
+        "ffmpeg-any": "./ffmpeg-any.js"
+    }
+}
