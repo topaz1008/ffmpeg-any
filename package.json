@@ -24,6 +24,6 @@
         "ffmpeg-any": "./ffmpeg-any.js"
     },
     "scripts": {
-        "publish": "echo \"Error: no test specified\" && exit 1"
+        "publish": "RUNNING npm publish"
     }
 }
