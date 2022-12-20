@@ -1,6 +1,7 @@
 {
-    "name": "ffmpeg-any",
+    "name": "@topaz1008/ffmpeg-any",
     "version": "0.0.1",
+    "description": "A command line tool for windows that batch process video files and directories with ffmpeg",
     "type": "module",
     "author": {
         "name": "Topaz Bar",
@@ -16,7 +17,13 @@
         "chalk": "^5.2.0",
         "minimist": "^1.2.7"
     },
+    "publishConfig": {
+        "@topaz1008:registry": "https://npm.pkg.github.com"
+    },
     "bin": {
         "ffmpeg-any": "./ffmpeg-any.js"
+    },
+    "scripts": {
+        "publish": "echo \"Error: no test specified\" && exit 1"
     }
 }
