@@ -24,6 +24,7 @@
         "ffmpeg-any": "./ffmpeg-any.js"
     },
     "scripts": {
-        "publish": "RUNNING npm publish"
+        "link": "npm link",
+        "publish": "echo RUNNING npm publish"
     }
 }
