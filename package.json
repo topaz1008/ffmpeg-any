@@ -1,6 +1,6 @@
 {
     "name": "@topaz1008/ffmpeg-any",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "description": "A command line tool for windows that batch process video files and directories with ffmpeg",
     "type": "module",
     "author": {
