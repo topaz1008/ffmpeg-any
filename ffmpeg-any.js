@@ -11,13 +11,14 @@ import chalk from 'chalk';
 const SUPPORTED_EXTENSIONS = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|mp4)$/i,
     BATCH_FILENAME = 'run-ffmpeg.bat',
     OR_GOTO_ERROR = '|| goto :error',
+    // PS quit on error? $ErrorActionPreference = "Stop"
     QUIT_ON_ERROR = ':error' + EOL +
                     'exit /b %errorlevel%' + EOL;
 
 let deleteSource = false,                   // Delete source files?
     ffmpegCommand = '-codec copy',          // Default ffmpeg command
     outputScriptFilename = 'run-ffmpeg',    // Output script filename
-    outputScriptExtension = 'ps1',          // Output script extensions (default is powershell)
+    outputScriptExtension = 'bat',          // Output script extensions (default is powershell)
     outputExtension = 'mp4',                // Default output extension
     subDirectoryMode = false,               // Should process subdirectories as well?
     filesCounter = 0;                       // Files processed counter
