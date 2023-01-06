@@ -85,7 +85,7 @@ batchfile += 'del ' + BATCH_FILENAME + EOL;
 batchfile += QUIT_ON_ERROR;
 
 // Finally write the batch file
-fs.writeFileSync(getOutputFilename(), batchfile);
+fs.writeFileSync(getOutputScriptFilename(), batchfile);
 
 ////////////////
 // Functions  //
@@ -172,7 +172,7 @@ function ffmpegGetCommand(input) {
     return c.join(' ');
 }
 
-function getOutputFilename() {
+function getOutputScriptFilename() {
     return format('%s.%s', outputScriptFilename, outputScriptExtension);
 }
 
