@@ -3,27 +3,25 @@
 import fs from 'fs';
 import path from 'path';
 import { format } from 'util';
-import { EOL } from 'os'
 
 import minimist from 'minimist';
 import chalk from 'chalk';
 
-const SUPPORTED_EXTENSIONS = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|mp4)$/i,
-    BATCH_FILENAME = 'run-ffmpeg.bat',
-    OR_GOTO_ERROR = '|| goto :error',
-    // PS quit on error? $ErrorActionPreference = "Stop"
-    QUIT_ON_ERROR = ':error' + EOL +
-                    'exit /b %errorlevel%' + EOL;
+import { Powershell, Batchfile } from './script-output.js';
+
+const SUPPORTED_EXTENSIONS = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)$/i;
 
 let deleteSource = false,                   // Delete source files?
     ffmpegCommand = '-codec copy',          // Default ffmpeg command
     outputScriptFilename = 'run-ffmpeg',    // Output script filename
-    outputScriptExtension = 'bat',          // Output script extensions (default is powershell)
+    outputScriptType = 'powershell',        // Output script extensions (default is powershell)
     outputExtension = 'mp4',                // Default output extension
     subDirectoryMode = false,               // Should process subdirectories as well?
     filesCounter = 0;                       // Files processed counter
 
 const argv = minimist(process.argv.slice(2));
+
+let scriptOutput = new Powershell();
 
 // Command line options
 if (argv['delete-source'] === true || argv['delete-source'] === 'true') {
@@ -50,21 +48,21 @@ if (argv['sub'] === true) {
 }
 if (argv['batchfile'] === true) {
     logInfo('Output set to batchfile');
-    outputScriptExtension = 'bat';
+    outputScriptType = 'batch';
+    scriptOutput = new Batchfile();
 }
 
 // Read current dir
 const cwd = process.cwd();
 const files = readSupportedFilesSync(cwd);
 
-let batchfile;
 if (subDirectoryMode === false) {
     if (files.length === 0) {
         logError('No video files to process. exiting...');
         process.exit(1);
     }
 
-    batchfile = processFiles(files);
+    processFiles(files);
 
 } else {
     const directories = getDirectories(cwd);
@@ -74,8 +72,8 @@ if (subDirectoryMode === false) {
     }
 
     // Process any files in cwd then scan all subdirectories.
-    batchfile = processFiles(files);
-    batchfile += processDirectories(directories);
+    processFiles(files);
+    processDirectories(directories);
 }
 
 // Log file count
@@ -93,21 +91,17 @@ fs.writeFileSync(getOutputScriptFilename(), batchfile);
 ////////////////
 
 function processFiles(files) {
-    let content = '';
     for (let i = 0; i < files.length; i++) {
-        content += ffmpegGetCommand(files[i]) + EOL;
+        scriptOutput.addCommand(ffmpegGetCommand(files[i]));
         filesCounter++;
 
         if (deleteSource === true) {
-            content += deleteFile(files[i]);
+            scriptOutput.deleteFile(files[i]);
         }
     }
-
-    return content;
 }
 
 function processDirectories(directories) {
-    let content = '';
     for (let i = 0; i < directories.length; i++) {
         // For each dir
         const files = readSupportedFilesSync(directories[i]);
@@ -116,19 +110,14 @@ function processDirectories(directories) {
             // For each file in dir
             const filepath = path.join(directories[i], files[j]);
 
-            content += ffmpegGetCommand(filepath) + EOL;
+            scriptOutput.addCommand(ffmpegGetCommand(filepath));
             filesCounter++;
+
             if (deleteSource === true) {
-                content += deleteFile(files[j]);
+                scriptOutput.deleteFile(files[j]);
             }
         }
     }
-
-    return content;
-}
-
-function deleteFile(file) {
-    return 'del ' + quote(file) + ' ' + OR_GOTO_ERROR + EOL;
 }
 
 function getDirectories(dir) {
@@ -168,13 +157,8 @@ function ffmpegGetCommand(input) {
     c.push(quote(input)); // Input
     c.push(ffmpegCommand); // ffmpeg command string
     c.push(outputName); // Output filepath, name and extension
-    c.push(OR_GOTO_ERROR); // Or error
 
     return c.join(' ');
-}
-
-function getOutputScriptFilename() {
-    return format('%s.%s', outputScriptFilename, outputScriptExtension);
 }
 
 function quote(val) {

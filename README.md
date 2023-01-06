@@ -3,13 +3,13 @@ ffmpeg-any
 
 A command line tool for windows that batch process video files and directories with [ffmpeg](https://ffmpeg.org/).
 
-This script DOES NOT make any changes to your files, it only creates a batch file with ffmpeg commands.
+This script DOES NOT make any changes to your files, it only creates a powershell script with ffmpeg commands.
 
-The resulting batch file will stop processing files if it encounters any errors.
+The resulting script will stop processing files if it encounters any errors.
 
-After running this script in a folder that contains supported video files, a batch file named `run-ffmpeg.bat` will be created in the current working directory. (where you ran ffmpeg-any from)
+After running this script in a folder that contains supported video files, a powershell script named `run-ffmpeg.ps1` will be created in the current working directory. (where you ran ffmpeg-any from)
 
-You can then view and/or edit `run-ffmpeg.bat` before running it to start conversion with ffmpeg.
+You can then view and/or edit `run-ffmpeg.ps1` before running it to start conversion with ffmpeg.
 
 Installing
 ---------------
@@ -42,6 +42,11 @@ ffmpeg-any --out="mkv"
 * sub - also process any subdirectories in the current working directory for any video files (only 1 level deep)
 ```
 ffmpeg-any --sub
+```
+
+* batchfile - outputs a batch file instead of a powershell script.
+```
+ffmpeg-any --batchfile
 ```
 
 Usage examples
