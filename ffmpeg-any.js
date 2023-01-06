@@ -14,11 +14,13 @@ const SUPPORTED_EXTENSIONS = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|mp4)$/i,
     QUIT_ON_ERROR = ':error' + EOL +
                     'exit /b %errorlevel%' + EOL;
 
-let deleteSource = false,           // Delete source files?
-    ffmpegCommand = '-codec copy',  // Default ffmpeg command
-    outputExtension = 'mp4',        // Default output extension
-    subDirectoryMode = false,       // Should process subdirectories as well?
-    filesCounter = 0;               // Files processed counter
+let deleteSource = false,                   // Delete source files?
+    ffmpegCommand = '-codec copy',          // Default ffmpeg command
+    outputScriptFilename = 'run-ffmpeg',    // Output script filename
+    outputScriptExtension = 'ps1',          // Output script extensions (default is powershell)
+    outputExtension = 'mp4',                // Default output extension
+    subDirectoryMode = false,               // Should process subdirectories as well?
+    filesCounter = 0;                       // Files processed counter
 
 const argv = minimist(process.argv.slice(2));
 
@@ -44,6 +46,10 @@ if (argv['out'] && argv['out'] !== '') {
 if (argv['sub'] === true) {
     logInfo('Subdirectories mode.');
     subDirectoryMode = true;
+}
+if (argv['batchfile'] === true) {
+    logInfo('Output set to batchfile');
+    outputScriptExtension = 'bat';
 }
 
 // Read current dir
@@ -79,7 +85,7 @@ batchfile += 'del ' + BATCH_FILENAME + EOL;
 batchfile += QUIT_ON_ERROR;
 
 // Finally write the batch file
-fs.writeFileSync(BATCH_FILENAME, batchfile);
+fs.writeFileSync(getOutputFilename(), batchfile);
 
 ////////////////
 // Functions  //
@@ -164,6 +170,10 @@ function ffmpegGetCommand(input) {
     c.push(OR_GOTO_ERROR); // Or error
 
     return c.join(' ');
+}
+
+function getOutputFilename() {
+    return format('%s.%s', outputScriptFilename, outputScriptExtension);
 }
 
 function quote(val) {
