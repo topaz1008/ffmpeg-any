@@ -3,3 +3,5 @@
 /coverage
 
 npm-debug.log
+run-ffmpeg.*
+*.mkv

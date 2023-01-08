@@ -54,7 +54,7 @@ if (opts.subDirectoryMode === false) {
     processDirectories(directories);
 }
 
-// Log file count
+// Log file count and write the file
 logInfo(format('Done, processed "%s" files.', filesCounter));
 
 // Delete batch file
