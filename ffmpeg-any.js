@@ -56,13 +56,7 @@ if (opts.subDirectoryMode === false) {
 
 // Log file count and write the file
 logInfo(format('Done, processed "%s" files.', filesCounter));
-
-// Delete batch file
-batchfile += 'del ' + BATCH_FILENAME + EOL;
-batchfile += QUIT_ON_ERROR;
-
-// Finally write the batch file
-fs.writeFileSync(getOutputScriptFilename(), batchfile);
+scriptOutput.writeFileSync(OUTPUT_FILENAME);
 
 ////////////////
 // Functions  //
@@ -128,9 +122,9 @@ function getOutputFilename(input) {
 }
 
 function ffmpegGetCommand(input) {
-    let c = ['ffmpeg -hide_banner -i'];
+    const c = ['ffmpeg -hide_banner -i'];
 
-    let outputName = getOutputFilename(input);
+    const outputName = getOutputFilename(input);
 
     c.push(quote(input)); // Input
     c.push(opts.ffmpegCommand); // ffmpeg command string
