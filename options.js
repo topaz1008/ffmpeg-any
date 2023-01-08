@@ -1,9 +1,11 @@
 import minimist from 'minimist';
 
 export class Options {
+    // Output script type
     static SCRIPT_TYPE_POWERSHELL = 'powershell';
     static SCRIPT_TYPE_BATCH = 'batch';
 
+    // Private members
     #deleteSource = false; // Delete source files?
     #ffmpegCommand = '-codec copy'; // Default ffmpeg command
     #outputExtension = 'mp4'; // Default output extension
@@ -32,23 +34,9 @@ export class Options {
     }
 
     // Getters
-    get deleteSource() {
-        return this.#deleteSource;
-    }
-
-    get ffmpegCommand() {
-        return this.#ffmpegCommand;
-    }
-
-    get outputExtension() {
-        return this.#outputExtension;
-    }
-
-    get subDirectoryMode() {
-        return this.#subDirectoryMode;
-    }
-
-    get outputScriptType() {
-        return this.#outputScriptType;
-    }
+    get deleteSource() { return this.#deleteSource; }
+    get ffmpegCommand() { return this.#ffmpegCommand; }
+    get outputExtension() { return this.#outputExtension; }
+    get subDirectoryMode() {return this.#subDirectoryMode; }
+    get outputScriptType() { return this.#outputScriptType; }
 }
