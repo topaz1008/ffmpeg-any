@@ -17,7 +17,7 @@ exit /b %errorlevel%
     }
 
     deleteFile(file) {
-        this.#commands.push(format('del "%s"', file));
+        this.addCommand(format('del "%s"', file));
     }
 
     writeFileSync(filename) {
@@ -55,7 +55,7 @@ export class Powershell {
     }
 
     deleteFile(file) {
-        this.#commands.push(format('Remove-Item -Force "%s"', file));
+        this.addCommand(format('Remove-Item -Force "%s"', file));
     }
 
     writeFileSync(filename) {
