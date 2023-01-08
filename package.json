@@ -25,6 +25,12 @@
     },
     "scripts": {
         "link": "npm link",
-        "publish": "echo RUNNING npm publish"
+        "publish": "echo RUNNING npm publish",
+        "test": "jest"
+    },
+    "devDependencies": {
+        "@types/jest": "^24.3.1",
+        "@jest/globals": "^29.3.1",
+        "jest": "^29.3.1"
     }
 }

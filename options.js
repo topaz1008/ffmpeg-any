@@ -15,22 +15,31 @@ export class Options {
     constructor(argv) {
         const options = minimist(argv.slice(2));
 
-        // Command line options
-        if (options['delete-source'] === true || options['delete-source'] === 'true') {
+        // Set all command line options
+        if (this.#isTruthy(options['delete-source'])) {
             this.#deleteSource = true;
         }
-        if (options['command'] && options['command'] !== '') {
-            this.#ffmpegCommand = argv['command'];
-        }
-        if (options['out'] && options['out'] !== '') {
-            this.#outputExtension = options['out'];
-        }
-        if (options['sub'] === true) {
+        if (this.#isTruthy(options['sub'])) {
             this.#subDirectoryMode = true;
         }
-        if (options['batchfile'] === true) {
+        if (this.#isTruthy(options['batchfile'])) {
             this.#outputScriptType = Options.SCRIPT_TYPE_BATCH;
         }
+        if (this.#isNotEmptyString(options['command'])) {
+            this.#ffmpegCommand = options['command'];
+        }
+        if (this.#isNotEmptyString(options['out'])) {
+            this.#outputExtension = options['out'];
+        }
+    }
+
+    // Private helpers
+    #isTruthy(v) {
+        return (v === true || v === 'true');
+    }
+
+    #isNotEmptyString(s) {
+        return (typeof s === 'string' && s !== '');
     }
 
     // Getters
