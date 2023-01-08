@@ -1,3 +1,5 @@
+import { format } from 'util';
+
 import minimist from 'minimist';
 
 export class Options {
@@ -6,11 +8,12 @@ export class Options {
     static SCRIPT_TYPE_BATCH = 'batch';
 
     // Private members
+    #supportedExtensions = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)$/i;
     #deleteSource = false; // Delete source files?
     #ffmpegCommand = '-codec copy'; // Default ffmpeg command
     #outputExtension = 'mp4'; // Default output extension
     #subDirectoryMode = false; // Should process subdirectories as well?
-    #outputScriptType = Options.SCRIPT_TYPE_POWERSHELL; // Output script extensions (default is powershell)
+    #outputScriptType = Options.SCRIPT_TYPE_POWERSHELL; // Script type (default is powershell)
 
     constructor(argv) {
         const options = minimist(argv.slice(2));
@@ -31,6 +34,9 @@ export class Options {
         if (this.#isNotEmptyString(options['out'])) {
             this.#outputExtension = options['out'];
         }
+        if (this.#isNotEmptyString(options['supportedExtensions'])) {
+            this.#supportedExtensions = new RegExp(format('\.(%s)$'), 'i');
+        }
     }
 
     // Private helpers
@@ -42,7 +48,8 @@ export class Options {
         return (typeof s === 'string' && s !== '');
     }
 
-    // Getters
+    // Public getters
+    get supportedExtensions() { return this.#supportedExtensions; }
     get deleteSource() { return this.#deleteSource; }
     get ffmpegCommand() { return this.#ffmpegCommand; }
     get outputExtension() { return this.#outputExtension; }

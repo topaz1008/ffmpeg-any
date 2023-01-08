@@ -9,9 +9,7 @@ import chalk from 'chalk';
 import { Options } from './options.js';
 import { Powershell, Batchfile } from './script-output.js';
 
-const SUPPORTED_EXTENSIONS = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)$/i,
-    OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename
-
+const OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename (no extension)
 const opts = new Options(process.argv);
 let scriptOutput = new Powershell();
 let filesCounter = 0;
@@ -103,12 +101,12 @@ function getDirectories(dir) {
 
 function readSupportedFilesSync(dir) {
     return fs.readdirSync(dir).filter(function (filename) {
-        return SUPPORTED_EXTENSIONS.test(filename);
+        return opts.supportedExtensions.test(filename);
     })
 }
 
 function getOutputFilename(input) {
-    let outputName = input.replace(SUPPORTED_EXTENSIONS, '');
+    let outputName = input.replace(opts.supportedExtensions, '');
 
     // If input and output extension is the same we need to
     // change the output filename.

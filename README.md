@@ -40,6 +40,11 @@ Options
    ```
    PS> ffmpeg-any --out="mkv"
    ```
+
+* extensions - override the default supported extensions: default is (webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)
+   ```
+   PS> ffmpeg-any --extensions="mkv|webm"
+   ```
   
 * sub - also process any subdirectories in the current working directory for any video files (only 1 level deep)
    ```
