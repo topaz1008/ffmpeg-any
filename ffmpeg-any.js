@@ -4,51 +4,29 @@ import fs from 'fs';
 import path from 'path';
 import { format } from 'util';
 
-import minimist from 'minimist';
 import chalk from 'chalk';
 
+import { Options } from './options.js';
 import { Powershell, Batchfile } from './script-output.js';
 
-const SUPPORTED_EXTENSIONS = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)$/i;
+const SUPPORTED_EXTENSIONS = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)$/i,
+    OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename
 
-let deleteSource = false,                   // Delete source files?
-    ffmpegCommand = '-codec copy',          // Default ffmpeg command
-    outputScriptFilename = 'run-ffmpeg',    // Output script filename
-    outputScriptType = 'powershell',        // Output script extensions (default is powershell)
-    outputExtension = 'mp4',                // Default output extension
-    subDirectoryMode = false,               // Should process subdirectories as well?
-    filesCounter = 0;                       // Files processed counter
-
-const argv = minimist(process.argv.slice(2));
-
+const opts = new Options(process.argv);
 let scriptOutput = new Powershell();
+let filesCounter = 0;
 
 // Command line options
-if (argv['delete-source'] === true || argv['delete-source'] === 'true') {
+if (opts.deleteSource === true) {
     logWarn('Deleting source files.');
-    deleteSource = true;
 }
-if (argv['command'] && argv['command'] !== '') {
-    logInfo('Running command: "' + argv['command'] + '"');
-    ffmpegCommand = argv['command'];
-
-} else {
-    logInfo('No ffmpeg command specified, using "-codec copy"');
-}
-if (argv['out'] && argv['out'] !== '') {
-    logInfo('Output extension is: "' + argv['out'] + '"');
-    outputExtension = argv['out'];
-
-} else {
-    logInfo('No output extension specified, using "mp4"');
-}
-if (argv['sub'] === true) {
+logInfo(`Running command: "${opts.ffmpegCommand}"`);
+logInfo(`Output extension is: "${opts.outputExtension}"`);
+if (opts.subDirectoryMode === true) {
     logInfo('Subdirectories mode.');
-    subDirectoryMode = true;
 }
-if (argv['batchfile'] === true) {
+if (opts.outputScriptType === Options.SCRIPT_TYPE_BATCH) {
     logInfo('Output set to batchfile');
-    outputScriptType = 'batch';
     scriptOutput = new Batchfile();
 }
 
@@ -56,7 +34,7 @@ if (argv['batchfile'] === true) {
 const cwd = process.cwd();
 const files = readSupportedFilesSync(cwd);
 
-if (subDirectoryMode === false) {
+if (opts.subDirectoryMode === false) {
     if (files.length === 0) {
         logError('No video files to process. exiting...');
         process.exit(1);
@@ -95,7 +73,7 @@ function processFiles(files) {
         scriptOutput.addCommand(ffmpegGetCommand(files[i]));
         filesCounter++;
 
-        if (deleteSource === true) {
+        if (opts.deleteSource === true) {
             scriptOutput.deleteFile(files[i]);
         }
     }
@@ -113,7 +91,7 @@ function processDirectories(directories) {
             scriptOutput.addCommand(ffmpegGetCommand(filepath));
             filesCounter++;
 
-            if (deleteSource === true) {
+            if (opts.deleteSource === true) {
                 scriptOutput.deleteFile(files[j]);
             }
         }
@@ -140,13 +118,13 @@ function getOutputFilename(input) {
 
     // If input and output extension is the same we need to
     // change the output filename.
-    if (new RegExp('\.' + outputExtension + '$', 'i').test(input)) {
+    if (new RegExp('\.' + opts.outputExtension + '$', 'i').test(input)) {
         // TODO: Expand support here
         outputName += '_1';
     }
 
     // Different extension
-    return format('"%s.%s"', outputName, outputExtension);
+    return format('"%s.%s"', outputName, opts.outputExtension);
 }
 
 function ffmpegGetCommand(input) {
@@ -155,7 +133,7 @@ function ffmpegGetCommand(input) {
     let outputName = getOutputFilename(input);
 
     c.push(quote(input)); // Input
-    c.push(ffmpegCommand); // ffmpeg command string
+    c.push(opts.ffmpegCommand); // ffmpeg command string
     c.push(outputName); // Output filepath, name and extension
 
     return c.join(' ');
