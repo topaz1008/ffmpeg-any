@@ -27,51 +27,53 @@ Options
 ---------------
 
 * command - the command to pass on to ffmpeg (if no command is passed then `-codec copy` will be used)
-```
-ffmpeg-any --command="-c:v libx264 -crf 21 -c:a aac -b:a 128k"
-```
+   ```
+   PS> ffmpeg-any --command="-c:v libx264 -crf 21 -c:a aac -b:a 128k"
+   ```
 
 * delete-source - will delete the source files after successful conversion (default is to keep them)
-```
-ffmpeg-any --delete-source
-```
+   ```
+   PS> ffmpeg-any --delete-source
+   ```
+  
 * out - specify a different extension for the output files (default is mp4)
-```
-ffmpeg-any --out="mkv"
-```
+   ```
+   PS> ffmpeg-any --out="mkv"
+   ```
+  
 * sub - also process any subdirectories in the current working directory for any video files (only 1 level deep)
-```
-ffmpeg-any --sub
-```
+   ```
+   PS> ffmpeg-any --sub
+   ```
 
 * batchfile - outputs a batch file instead of a powershell script.
-```
-ffmpeg-any --batchfile
-```
+   ```
+   PS> ffmpeg-any --batchfile
+   ```
 
 Usage examples
 ---------------
 
 1. This will process any video files supported in the current directory with the passed ffmpeg parameters while keeping the source files.
     ```
-    ffmpeg-any --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
+    PS> ffmpeg-any --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
     ```
     
-    The batchfile output for a single file will be
+    The pseudo output for a single file will be:
     ```
-    ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k "mymovie.mp4"
+    PS> ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k "mymovie.mp4"
     ```
 
-2. This will convert all files in the current working directory and any of its subfolders to x264 mp4 with aac audio while deleting original files
-```
-ffmpeg-any --delete-source --sub --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
-```
+2. This will convert all files in the current working directory and any of its sub-folders to x264 mp4 with aac audio while deleting original files:
+   ```
+   PS> ffmpeg-any --delete-source --sub --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
+   ```
 
-The batchfile output for a single file will be
-```
-ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k "mymovie.mp4"
-del "mymovie.mkv"
-```
+   The pseudo output for a single file will be:
+   ```
+   ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k "mymovie.mp4"
+   del "mymovie.mkv"
+   ```
 
 Contributing
 ---------------
