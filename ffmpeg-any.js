@@ -40,14 +40,15 @@ if (opts.subDirectoryMode === false) {
     // Process any files in cwd then scan all subdirectories.
     filesCounter = processDirectories([cwd].concat(directories));
 }
-if (filesCounter === 0) {
-    logError('No video files to process. exiting...');
-    process.exit(1);
-}
+if (filesCounter > 0) {
+    // Log file count and write the file
+    logInfo(format('Done, processed "%s" file(s).', filesCounter));
+    scriptOutput.writeFileSync(OUTPUT_FILENAME);
 
-// Log file count and write the file
-logInfo(format('Done, processed "%s" file(s).', filesCounter));
-scriptOutput.writeFileSync(OUTPUT_FILENAME);
+} else {
+    // Nothing to process, exit.
+    logError('No video files to process. exiting...');
+}
 
 ////////////////
 // Functions  //
