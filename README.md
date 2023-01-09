@@ -1,7 +1,7 @@
 ffmpeg-any
 ==================
 
-A command line tool for windows that batch process video files and directories with [ffmpeg](https://ffmpeg.org/).
+A Powershell script for windows that batch process video files and directories with [ffmpeg](https://ffmpeg.org/).
 
 This script DOES NOT make any changes to your files, it only creates a powershell script with ffmpeg commands.
 
