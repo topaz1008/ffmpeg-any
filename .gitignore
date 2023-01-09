@@ -1,7 +1,9 @@
 /.idea
 /node_modules
 /coverage
+/temp
 
 npm-debug.log
+tmp.js
 run-ffmpeg.*
 *.mkv

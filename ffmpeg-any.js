@@ -12,7 +12,6 @@ import { Powershell, Batchfile } from './script-output.js';
 const OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename (no extension)
 const opts = new Options(process.argv);
 let scriptOutput = new Powershell();
-let filesCounter = 0;
 
 // Command line options
 if (opts.deleteSource === true) {
@@ -28,50 +27,35 @@ if (opts.outputScriptType === Options.SCRIPT_TYPE_BATCH) {
     scriptOutput = new Batchfile();
 }
 
-// Read current dir
+// Get current working directory (where ffmpeg-any was run from)
 const cwd = process.cwd();
-const files = readSupportedFilesSync(cwd);
 
+let filesCounter;
 if (opts.subDirectoryMode === false) {
-    if (files.length === 0) {
-        logError('No video files to process. exiting...');
-        process.exit(1);
-    }
-
-    processFiles(files);
+    filesCounter = processDirectories([cwd]);
 
 } else {
     const directories = getDirectories(cwd);
-    if (directories.length === 0) {
-        logError('No subdirectories exist. exiting...');
-        process.exit(1);
-    }
 
     // Process any files in cwd then scan all subdirectories.
-    processFiles(files);
-    processDirectories(directories);
+    filesCounter = processDirectories([cwd].concat(directories));
+}
+if (filesCounter === 0) {
+    logError('No video files to process. exiting...');
+    process.exit(1);
 }
 
 // Log file count and write the file
-logInfo(format('Done, processed "%s" files.', filesCounter));
+logInfo(format('Done, processed "%s" file(s).', filesCounter));
 scriptOutput.writeFileSync(OUTPUT_FILENAME);
 
 ////////////////
 // Functions  //
 ////////////////
 
-function processFiles(files) {
-    for (let i = 0; i < files.length; i++) {
-        scriptOutput.addCommand(ffmpegGetCommand(files[i]));
-        filesCounter++;
-
-        if (opts.deleteSource === true) {
-            scriptOutput.deleteFile(files[i]);
-        }
-    }
-}
-
 function processDirectories(directories) {
+    let processedFiles = 0;
+
     for (let i = 0; i < directories.length; i++) {
         // For each dir
         const files = readSupportedFilesSync(directories[i]);
@@ -81,13 +65,15 @@ function processDirectories(directories) {
             const filepath = path.join(directories[i], files[j]);
 
             scriptOutput.addCommand(ffmpegGetCommand(filepath));
-            filesCounter++;
+            processedFiles++;
 
             if (opts.deleteSource === true) {
-                scriptOutput.deleteFile(files[j]);
+                scriptOutput.deleteFile(filepath);
             }
         }
     }
+
+    return processedFiles;
 }
 
 function getDirectories(dir) {
@@ -110,7 +96,7 @@ function getOutputFilename(input) {
 
     // If input and output extension is the same we need to
     // change the output filename.
-    if (new RegExp('\.' + opts.outputExtension + '$', 'i').test(input)) {
+    if (new RegExp(format('\.%s$'), 'i').test(input)) {
         // TODO: Expand support here
         outputName += '_1';
     }
@@ -124,15 +110,11 @@ function ffmpegGetCommand(input) {
 
     const outputName = getOutputFilename(input);
 
-    c.push(quote(input)); // Input
+    c.push(format('"%s"', input)); // Input
     c.push(opts.ffmpegCommand); // ffmpeg command string
     c.push(outputName); // Output filepath, name and extension
 
     return c.join(' ');
-}
-
-function quote(val) {
-    return '"' + val + '"';
 }
 
 function logInfo(msg) {
