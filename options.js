@@ -34,8 +34,8 @@ export class Options {
         if (this.#isNotEmptyString(options['out'])) {
             this.#outputExtension = options['out'];
         }
-        if (this.#isNotEmptyString(options['supportedExtensions'])) {
-            const regex = format('\.(%s)$', options['supportedExtensions']);
+        if (this.#isNotEmptyString(options['extensions'])) {
+            const regex = format('\.(%s)$', options['extensions']);
             this.#supportedExtensions = new RegExp(regex, 'i');
         }
     }
