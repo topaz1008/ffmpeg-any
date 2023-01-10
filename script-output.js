@@ -133,7 +133,7 @@ class PowershellScript extends Script {
 class BashScript extends Script {
     // Bash script exit on error is taken from
     // @link https://stackoverflow.com/a/2871034/1572422
-    SCRIPT_CONTENT = `!/bin/bash
+    SCRIPT_CONTENT = `#!/bin/bash
 set -euxo pipefail
 %s
 `;
