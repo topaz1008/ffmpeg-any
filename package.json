@@ -1,7 +1,7 @@
 {
     "name": "@topaz1008/ffmpeg-any",
     "version": "0.0.7",
-    "description": "A Powershell script for windows that batch process video files and directories with ffmpeg",
+    "description": "A command line tool that batch processes video files and directories with ffmpeg.",
     "type": "module",
     "author": {
         "name": "Topaz Bar",
