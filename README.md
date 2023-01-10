@@ -58,11 +58,6 @@ Options
    $> ffmpeg-any --sub
    ```
 
-* batchfile - outputs a batch file instead of a powershell script.
-   ```
-   $> ffmpeg-any --batchfile
-   ```
-
 Usage examples
 ---------------
 
