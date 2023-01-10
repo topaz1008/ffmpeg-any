@@ -12,7 +12,7 @@ import { ScriptFactory } from './script-output.js';
 const OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename (no extension)
 
 const opts = new Options(process.argv);
-const scriptOutput = ScriptFactory.create(opts.outputScriptType);
+const script = ScriptFactory.create(opts.outputScriptType);
 
 // Command line options
 if (opts.subDirectoryMode === true) {
@@ -41,7 +41,7 @@ if (opts.subDirectoryMode === false) {
 if (filesCounter > 0) {
     // Log file count and write the file
     logInfo(`Done, processed "${filesCounter}" file(s).`);
-    scriptOutput.writeFileSync(OUTPUT_FILENAME);
+    script.writeFileSync(OUTPUT_FILENAME);
 
 } else {
     // Nothing to process, exit.
@@ -51,7 +51,6 @@ if (filesCounter > 0) {
 ////////////////
 // Functions  //
 ////////////////
-
 function processDirectories(directories) {
     let processedFiles = 0;
 
@@ -63,11 +62,11 @@ function processDirectories(directories) {
             // For each file in dir
             const filepath = path.join(directories[i], files[j]);
 
-            scriptOutput.addCommand(ffmpegGetCommand(filepath));
+            script.addCommand(ffmpegGetCommand(filepath));
             processedFiles++;
 
             if (opts.deleteSource === true) {
-                scriptOutput.deleteFile(filepath);
+                script.deleteFile(filepath);
             }
         }
     }
@@ -120,16 +119,21 @@ function getOutputFilename(input) {
         // so we can fall through to the return statement below.
     }
 
-    return format('"%s"', result);
+    return result;
 }
 
 function ffmpegGetCommand(input) {
     const c = ['ffmpeg -hide_banner -i'];
     const outputName = getOutputFilename(input);
 
-    c.push(format('"%s"', input)); // Input
-    c.push(opts.ffmpegCommand); // ffmpeg command string
-    c.push(outputName); // Output filepath, name and extension
+    // Absolute input file path
+    c.push(format('"%s"', input));
+
+    // ffmpeg command string
+    c.push(opts.ffmpegCommand);
+
+    // Absolute output filepath, name and extension
+    c.push(format('"%s"', outputName));
 
     return c.join(' ');
 }
