@@ -35,7 +35,7 @@ export class Options {
             this.#outputExtension = options['out'];
         }
         if (this.#isNotEmptyString(options['extensions'])) {
-            const regex = format('\.(%s)$', options['extensions']);
+            const regex = format('\\.(%s)$', options['extensions']);
             this.#supportedExtensions = new RegExp(regex, 'i');
         }
     }
@@ -50,10 +50,27 @@ export class Options {
     }
 
     // Public getters
-    get supportedExtensions() { return this.#supportedExtensions; }
-    get deleteSource() { return this.#deleteSource; }
-    get ffmpegCommand() { return this.#ffmpegCommand; }
-    get outputExtension() { return this.#outputExtension; }
-    get subDirectoryMode() {return this.#subDirectoryMode; }
-    get outputScriptType() { return this.#outputScriptType; }
+    get supportedExtensions() {
+        return this.#supportedExtensions;
+    }
+
+    get deleteSource() {
+        return this.#deleteSource;
+    }
+
+    get ffmpegCommand() {
+        return this.#ffmpegCommand;
+    }
+
+    get outputExtension() {
+        return this.#outputExtension;
+    }
+
+    get subDirectoryMode() {
+        return this.#subDirectoryMode;
+    }
+
+    get outputScriptType() {
+        return this.#outputScriptType;
+    }
 }
