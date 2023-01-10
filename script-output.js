@@ -10,7 +10,11 @@ export class ScriptType {
     static #BATCH = 'batch';
     static #BASH = 'bash';
 
-    // These getters make these constants "static const"
+    constructor() {
+        throw new Error('ScriptType class is static, it should not be instantiated directly.');
+    }
+
+// These getters make these constants "static const"
     static get POWERSHELL() { return this.#POWERSHELL; }
     static get BATCH() { return this.#BATCH; }
     static get BASH() { return this.#BASH; }
@@ -41,6 +45,10 @@ export class ScriptType {
  * Script factory create new instances of a script class from a string type.
  */
 export class ScriptFactory {
+    constructor() {
+        throw new Error('ScriptFactory class is static, it should not be instantiated directly.');
+    }
+
     static create(type) {
         switch (type) {
             case ScriptType.POWERSHELL: return new PowershellScript();
