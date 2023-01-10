@@ -74,8 +74,6 @@ class Script {
 
     constructor(type) {
         this.type = type;
-
-        return new PowershellScript();
     }
 
     addCommand(command) {
