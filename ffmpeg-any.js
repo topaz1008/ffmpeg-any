@@ -7,25 +7,23 @@ import { format } from 'util';
 import chalk from 'chalk';
 
 import { Options } from './options.js';
-import { Powershell, Batchfile } from './script-output.js';
+import { ScriptFactory } from './script-output.js';
 
 const OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename (no extension)
+
 const opts = new Options(process.argv);
-let scriptOutput = new Powershell();
+const scriptOutput = ScriptFactory.create(opts.outputScriptType);
 
 // Command line options
+if (opts.subDirectoryMode === true) {
+    logInfo('Subdirectories mode.');
+}
+logInfo(`Script output set to "${opts.outputScriptType}".`);
 if (opts.deleteSource === true) {
     logWarn('Deleting source files.');
 }
 logInfo(`Running command: "${opts.ffmpegCommand}"`);
 logInfo(`Output extension is: "${opts.outputExtension}"`);
-if (opts.subDirectoryMode === true) {
-    logInfo('Subdirectories mode.');
-}
-if (opts.outputScriptType === Options.SCRIPT_TYPE_BATCH) {
-    logInfo('Output set to batchfile.');
-    scriptOutput = new Batchfile();
-}
 
 // Get current working directory (where ffmpeg-any was run from)
 const cwd = process.cwd();
@@ -99,7 +97,7 @@ function getOutputFilename(input) {
     }
 
     // Strip extension
-    let outputName = input.replace(opts.supportedExtensions, '');
+    const outputName = input.replace(opts.supportedExtensions, '');
 
     // Create output filename with new extension
     let result = formatFilename(outputName, opts.outputExtension);
@@ -127,7 +125,6 @@ function getOutputFilename(input) {
 
 function ffmpegGetCommand(input) {
     const c = ['ffmpeg -hide_banner -i'];
-
     const outputName = getOutputFilename(input);
 
     c.push(format('"%s"', input)); // Input

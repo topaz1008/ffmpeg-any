@@ -2,18 +2,16 @@ import { format } from 'util';
 
 import minimist from 'minimist';
 
-export class Options {
-    // Output script type
-    static SCRIPT_TYPE_POWERSHELL = 'powershell';
-    static SCRIPT_TYPE_BATCH = 'batch';
+import { ScriptType } from './script-output.js';
 
+export class Options {
     // Private members
     #supportedExtensions = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|mpeg|ts|avi|rm|mp4)$/i;
     #deleteSource = false; // Delete source files?
     #ffmpegCommand = '-codec copy'; // Default ffmpeg command
     #outputExtension = 'mp4'; // Default output extension
     #subDirectoryMode = false; // Should process subdirectories as well?
-    #outputScriptType = Options.SCRIPT_TYPE_POWERSHELL; // Script type (default is powershell)
+    #outputScriptType = ScriptType.POWERSHELL; // Script type (default is powershell)
 
     constructor(argv) {
         const options = minimist(argv.slice(2));
@@ -25,9 +23,12 @@ export class Options {
         if (this.#isTruthy(options['sub'])) {
             this.#subDirectoryMode = true;
         }
-        if (this.#isTruthy(options['batchfile'])) {
-            this.#outputScriptType = Options.SCRIPT_TYPE_BATCH;
+
+        // Only change the script type if it was passed AND it's valid.
+        if (ScriptType.isValid(options['script-type'])) {
+            this.#outputScriptType = options['script-type'];
         }
+
         if (this.#isNotEmptyString(options['command'])) {
             this.#ffmpegCommand = options['command'];
         }

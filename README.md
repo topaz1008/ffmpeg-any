@@ -1,15 +1,17 @@
 ffmpeg-any
 ==================
 
-A Powershell script for windows that batch process video files and directories with [ffmpeg](https://ffmpeg.org/).
+A command line tool that batch processes video files and directories with [ffmpeg](https://ffmpeg.org/).
 
-This script DOES NOT make any changes to your files, it only creates a powershell script with ffmpeg commands.
+Supports outputting powershell, batch, and bash scripts. For use with Windows or Mac\UNIX.
+
+This script DOES NOT make any changes to your files, it only creates a script with ffmpeg commands.
 
 The resulting script will stop processing files if it encounters any errors.
 
-After running this script in a folder that contains supported video files, a powershell script named `run-ffmpeg.ps1` will be created in the current working directory. (where you ran ffmpeg-any from)
+After running this script in a folder that contains supported video files, a script named `run-ffmpeg` will be created in the current working directory. (where you ran ffmpeg-any from)
 
-You can then view and/or edit `run-ffmpeg.ps1` before running it to start conversion with ffmpeg.
+You can then view and/or edit `run-ffmpeg` before running it to start conversion with ffmpeg. (file extension will depend on the output script type you choose)
 
 Installing
 ---------------
@@ -28,32 +30,37 @@ Options
 
 * command - the command to pass on to ffmpeg (if no command is passed then `-codec copy` will be used)
    ```
-   PS> ffmpeg-any --command="-c:v libx264 -crf 21 -c:a aac -b:a 128k"
+   $> ffmpeg-any --command="-c:v libx264 -crf 21 -c:a aac -b:a 128k"
    ```
 
 * delete-source - will delete the source files after successful conversion (default is to keep them)
    ```
-   PS> ffmpeg-any --delete-source
+   $> ffmpeg-any --delete-source
    ```
   
 * out - specify a different extension for the output files (default is mp4)
    ```
-   PS> ffmpeg-any --out="mkv"
+   $> ffmpeg-any --out="mkv"
+   ```
+  
+* script-type - specify a different script type to output. (default is powershell, valid values are `powershell|batch|bash`)
+   ```
+   $> ffmpeg-any --script-type="bash"
    ```
 
 * extensions - override the default supported extensions: default is (webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)
    ```
-   PS> ffmpeg-any --extensions="mkv|webm"
+   $> ffmpeg-any --extensions="mkv|webm"
    ```
   
 * sub - also process any subdirectories in the current working directory for any video files (only 1 level deep)
    ```
-   PS> ffmpeg-any --sub
+   $> ffmpeg-any --sub
    ```
 
 * batchfile - outputs a batch file instead of a powershell script.
    ```
-   PS> ffmpeg-any --batchfile
+   $> ffmpeg-any --batchfile
    ```
 
 Usage examples
@@ -61,17 +68,17 @@ Usage examples
 
 1. This will process any video files supported in the current directory with the passed ffmpeg parameters while keeping the source files.
     ```
-    PS> ffmpeg-any --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
+    $> ffmpeg-any --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
     ```
     
     The pseudo output for a single file will be:
     ```
-    PS> ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k "mymovie.mp4"
+    $> ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k "mymovie.mp4"
     ```
 
 2. This will convert all files in the current working directory and any of its sub-folders to x264 mp4 with aac audio while deleting original files:
    ```
-   PS> ffmpeg-any --delete-source --sub --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
+   $> ffmpeg-any --delete-source --sub --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
    ```
 
    The pseudo output for a single file will be:

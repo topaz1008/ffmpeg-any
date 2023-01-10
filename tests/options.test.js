@@ -1,6 +1,7 @@
 import { describe, expect, test, jest } from '@jest/globals';
 
 import { Options } from '../options.js';
+import { ScriptType } from '../script-output.js';
 
 describe('Options module', () => {
     test('Default options', () => {
@@ -15,7 +16,7 @@ describe('Options module', () => {
         expect(opts.ffmpegCommand).toBe('-codec copy');
         expect(opts.outputExtension).toBe('mp4');
         expect(opts.subDirectoryMode).toBe(false);
-        expect(opts.outputScriptType).toBe(Options.SCRIPT_TYPE_POWERSHELL);
+        expect(opts.outputScriptType).toBe(ScriptType.POWERSHELL);
         expect(opts.supportedExtensions).toBe(/\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)$/i);
     });
     test('All options', () => {
@@ -37,7 +38,7 @@ describe('Options module', () => {
         expect(opts.ffmpegCommand).toBe('-c:v libx264');
         expect(opts.outputExtension).toBe('mkv');
         expect(opts.subDirectoryMode).toBe(true);
-        expect(opts.outputScriptType).toBe(Options.SCRIPT_TYPE_BATCH);
+        expect(opts.outputScriptType).toBe(ScriptType.BATCH);
         expect(opts.supportedExtensions).toBe(new RegExp('\.(mkv|webm)$', 'i'));
     });
     test('Options helpers', () => {

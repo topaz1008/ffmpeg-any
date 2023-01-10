@@ -1,16 +1,17 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { Powershell, Batchfile } from '../script-output.js';
-
 describe('Script output module', () => {
     test('Powershell', () => {
-        const script = new Powershell();
-        script.addCommand('ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 "mymovie.mp4"');
-        script.deleteFile('mymovie.mkv');
+        // const script = new PowershellScript();
+        // script.addCommand('ffmpeg -hide_banner -i "mymovie.mkv" -c:v libx264 "mymovie.mp4"');
+        // script.deleteFile('mymovie.mkv');
 
         expect(1 + 1).toBe(2);
     });
-    test('Batchfile', () => {
+    test('Batch', () => {
+        expect(1 + 1).toBe(2);
+    });
+    test('Bash', () => {
         expect(1 + 1).toBe(2);
     });
 });
