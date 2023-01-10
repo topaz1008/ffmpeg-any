@@ -8,7 +8,7 @@ export class Options {
     static SCRIPT_TYPE_BATCH = 'batch';
 
     // Private members
-    #supportedExtensions = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)$/i;
+    #supportedExtensions = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|mpeg|ts|avi|rm|mp4)$/i;
     #deleteSource = false; // Delete source files?
     #ffmpegCommand = '-codec copy'; // Default ffmpeg command
     #outputExtension = 'mp4'; // Default output extension

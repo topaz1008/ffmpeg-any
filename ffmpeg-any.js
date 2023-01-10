@@ -23,7 +23,7 @@ if (opts.subDirectoryMode === true) {
     logInfo('Subdirectories mode.');
 }
 if (opts.outputScriptType === Options.SCRIPT_TYPE_BATCH) {
-    logInfo('Output set to batchfile');
+    logInfo('Output set to batchfile.');
     scriptOutput = new Batchfile();
 }
 
@@ -42,7 +42,7 @@ if (opts.subDirectoryMode === false) {
 }
 if (filesCounter > 0) {
     // Log file count and write the file
-    logInfo(format('Done, processed "%s" file(s).', filesCounter));
+    logInfo(`Done, processed "${filesCounter}" file(s).`);
     scriptOutput.writeFileSync(OUTPUT_FILENAME);
 
 } else {
@@ -93,17 +93,36 @@ function readSupportedFilesSync(dir) {
 }
 
 function getOutputFilename(input) {
+
+    function formatFilename(name, extension) {
+        return format('%s.%s', name, extension);
+    }
+
+    // Strip extension
     let outputName = input.replace(opts.supportedExtensions, '');
+
+    // Create output filename with new extension
+    let result = formatFilename(outputName, opts.outputExtension);
 
     // If input and output extension is the same we need to
     // change the output filename.
-    if (new RegExp(format('\.%s$'), 'i').test(input)) {
-        // TODO: Expand support here
-        outputName += '_1';
+    const extensionRegex = new RegExp(format('\\.%s$', opts.outputExtension), 'i');
+    if (extensionRegex.test(input)) {
+
+        let newName, i = 1;
+        do {
+            // Append (i) to the filename until an available filename is found.
+            newName = `${outputName} (${i})`;
+            result = formatFilename(newName, opts.outputExtension);
+            i++;
+
+        } while (fs.existsSync(result));
+
+        // If we get here 'result' will contain a valid new filename,
+        // so we can fall through to the return statement below.
     }
 
-    // Different extension
-    return format('"%s.%s"', outputName, opts.outputExtension);
+    return format('"%s"', result);
 }
 
 function ffmpegGetCommand(input) {
