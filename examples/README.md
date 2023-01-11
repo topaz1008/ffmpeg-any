@@ -14,7 +14,7 @@ How to add a new script type
    3. `DELETE_COMMAND_CONTENT` - the template for a delete command.
 3. You can optionally override `deleteFile()`, `addCommand()` `writeFileSync()` functions if you need to. 
 
-Here is an example of creating a simple test output file.
+Here is an example of creating a simple text output file.
 
 ```javascript
 // Step 1
