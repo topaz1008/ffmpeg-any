@@ -14,7 +14,7 @@ export class ScriptType {
         throw new Error('ScriptType class is static, it should not be instantiated directly.');
     }
 
-// These getters make these constants "static const"
+    // These getters make these constants "public static const"
     static get POWERSHELL() { return this.#POWERSHELL; }
     static get BATCH() { return this.#BATCH; }
     static get BASH() { return this.#BASH; }

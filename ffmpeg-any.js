@@ -106,10 +106,10 @@ function getOutputFilename(input) {
     const extensionRegex = new RegExp(format('\\.%s$', opts.outputExtension), 'i');
     if (extensionRegex.test(input)) {
 
-        let newName, i = 1;
+        let i = 1;
         do {
             // Append (i) to the filename until an available filename is found.
-            newName = `${outputName} (${i})`;
+            const newName = `${outputName} (${i})`;
             result = formatFilename(newName, opts.outputExtension);
             i++;
 
