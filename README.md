@@ -85,3 +85,7 @@ Usage examples
 Contributing
 ---------------
 If you want to contribute; fork this repository, make your changes and submit a pull-request.
+
+TODO
+---------------
+* Add more comprehensive tests.
