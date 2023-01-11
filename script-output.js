@@ -9,6 +9,7 @@ export class ScriptType {
     static #POWERSHELL = 'powershell';
     static #BATCH = 'batch';
     static #BASH = 'bash';
+    static #TEXT = 'text';
 
     constructor() {
         throw new Error('ScriptType class is static, it should not be instantiated directly.');
@@ -18,12 +19,14 @@ export class ScriptType {
     static get POWERSHELL() { return this.#POWERSHELL; }
     static get BATCH() { return this.#BATCH; }
     static get BASH() { return this.#BASH; }
+    static get TEXT() { return this.#TEXT; }
 
     static getExtension(type) {
         switch (type) {
             case this.POWERSHELL: return 'ps1';
             case this.BATCH: return 'bat';
             case this.BASH: return 'sh';
+            case this.TEXT: return 'txt';
 
             default: return ''; // No extension
         }
@@ -34,6 +37,7 @@ export class ScriptType {
             case this.POWERSHELL:
             case this.BATCH:
             case this.BASH:
+            case this.TEXT:
                 return true;
 
             default: return false;
@@ -54,6 +58,7 @@ export class ScriptFactory {
             case ScriptType.POWERSHELL: return new PowershellScript();
             case ScriptType.BATCH: return new BatchScript();
             case ScriptType.BASH: return new BashScript();
+            case ScriptType.TEXT: return new TextScript();
 
             default: throw new Error(`Invalid script type "${type}"`);
         }
@@ -76,7 +81,7 @@ export class ScriptFactory {
 class Script {
     type = 'none';
     commands = [];
-    SCRIPT_CONTENT = '%s';
+    SCRIPT_CONTENT = '%s' + EOL;
     COMMAND_CONTENT = '%s';
     DELETE_COMMAND_CONTENT = '';
 
@@ -149,4 +154,16 @@ set -euxo pipefail
     DELETE_COMMAND_CONTENT = 'rm -f "%s"';
 
     constructor() { super(ScriptType.BASH); }
+}
+
+class TextScript extends Script {
+
+    // Default templates data members defined in Script base class are enough
+
+    constructor() { super(ScriptType.TEXT); }
+
+    deleteFile(filename) {
+        // we override this function with a no-op
+        // delete commands would not make sense in a text file.
+    }
 }

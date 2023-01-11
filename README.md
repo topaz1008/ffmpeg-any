@@ -3,7 +3,7 @@ ffmpeg-any
 
 A command line tool that batch processes video files and directories with [ffmpeg](https://ffmpeg.org/).
 
-Supports outputting powershell, batch, and bash scripts. For use with Windows or Mac\UNIX.
+Supports outputting powershell, batch and bash scripts; or a simple text file. For use with Windows or Mac\UNIX.
 
 This script DOES NOT make any changes to your files, it only creates a script with ffmpeg commands.
 
@@ -43,7 +43,7 @@ Options
    $> ffmpeg-any --out="mkv"
    ```
   
-* script-type - specify a different script type to output. (default is powershell, valid values are `powershell|batch|bash`)
+* script-type - specify a different script type to output. (default is powershell, valid values are `powershell|batch|bash|text`)
    ```
    $> ffmpeg-any --script-type="bash"
    ```
