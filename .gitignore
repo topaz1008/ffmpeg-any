@@ -3,7 +3,8 @@
 /coverage
 /temp
 
+/run-ffmpeg.*
 npm-debug.log
 tmp.js
-run-ffmpeg.*
+
 *.mkv

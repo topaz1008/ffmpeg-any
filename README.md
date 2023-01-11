@@ -7,7 +7,7 @@ Supports outputting powershell, batch, and bash scripts. For use with Windows or
 
 This script DOES NOT make any changes to your files, it only creates a script with ffmpeg commands.
 
-The resulting script will stop processing files if it encounters any errors.
+The resulting script will stop processing files if it encounters any errors. example output scripts can be found [HERE](https://github.com/topaz1008/ffmpeg-any/tree/master/examples)
 
 After running this script in a folder that contains supported video files, a script named `run-ffmpeg` will be created in the current working directory. (where you ran ffmpeg-any from)
 
