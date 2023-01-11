@@ -1,6 +1,6 @@
 {
     "name": "@topaz1008/ffmpeg-any",
-    "version": "0.0.8",
+    "version": "0.0.20",
     "description": "A command line tool that batch processes video files and directories with ffmpeg.",
     "type": "module",
     "author": {
@@ -18,9 +18,6 @@
     "dependencies": {
         "chalk": "^5.2.0",
         "minimist": "^1.2.7"
-    },
-    "publishConfig": {
-        "@topaz1008:registry": "https://npm.pkg.github.com"
     },
     "bin": {
         "ffmpeg-any": "./ffmpeg-any.js"
