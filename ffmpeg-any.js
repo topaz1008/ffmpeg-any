@@ -109,7 +109,7 @@ function getOutputFilename(input) {
         let i = 1;
         do {
             // Append (i) to the filename until an available filename is found.
-            const newName = `${outputName} (${i})`;
+            const newName = `${outputName}_(${i})`;
             result = formatFilename(newName, opts.outputExtension);
             i++;
 
