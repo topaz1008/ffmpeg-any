@@ -7,7 +7,7 @@ This folder contains example output scripts converting 3 video files using simpl
 How to add a new script type
 ==================
 
-1. Add your type constant and its extension to `ScriptType` and `ScriptFactory` classes.
+1. Add your type constant to `ScriptType` and `ScriptFactory` classes.
 2. Create a new class that extends `Script` class; then override the following data members. (all members are string constants used in Node.js format() calls)
    1. `SCRIPT_CONTENT` - the template for the entire script, it will wrap the entire list of commands.
    2. `COMMAND_CONTENT` - the template for a single command (e.g. a single ffmpeg command, or a single delete command)
