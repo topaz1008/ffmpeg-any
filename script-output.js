@@ -21,17 +21,6 @@ export class ScriptType {
     static get BASH() { return this.#BASH; }
     static get TEXT() { return this.#TEXT; }
 
-    static getExtension(type) {
-        switch (type) {
-            case this.POWERSHELL: return 'ps1';
-            case this.BATCH: return 'bat';
-            case this.BASH: return 'sh';
-            case this.TEXT: return 'txt';
-
-            default: return ''; // No extension
-        }
-    }
-
     static isValid(type) {
         switch (type) {
             case this.POWERSHELL:
@@ -76,18 +65,14 @@ export class ScriptFactory {
  * DELETE_COMMAND_CONTENT
  *      the template for a delete command.
  *
- * In addition, a super() call must be called with the new type constant passed in the constructor.
+ * In addition, a getExtension() function MUST be implemented;
+ * which returns the extension for the script type.
  */
 class Script {
-    type = 'none';
     commands = [];
     SCRIPT_CONTENT = '%s' + EOL;
     COMMAND_CONTENT = '%s';
     DELETE_COMMAND_CONTENT = '';
-
-    constructor(type) {
-        this.type = type;
-    }
 
     addCommand(command) {
         this.commands.push(format(this.COMMAND_CONTENT, command));
@@ -97,8 +82,12 @@ class Script {
         this.addCommand(format(this.DELETE_COMMAND_CONTENT, filename));
     }
 
+    getExtension() {
+        return '';
+    }
+
     writeFileSync(filename) {
-        const extension = ScriptType.getExtension(this.type);
+        const extension = this.getExtension();
         const outputName = format('%s.%s', filename, extension);
 
         // Delete self (the script)
@@ -119,7 +108,9 @@ exit /b %errorlevel%
     COMMAND_CONTENT = '%s || goto :error';
     DELETE_COMMAND_CONTENT = 'del "%s"';
 
-    constructor() { super(ScriptType.BATCH); }
+    getExtension() {
+        return 'bat';
+    }
 }
 
 class PowershellScript extends Script {
@@ -140,7 +131,9 @@ class PowershellScript extends Script {
 } -ErrorAction Stop`;
     DELETE_COMMAND_CONTENT = 'Remove-Item -Force "%s"';
 
-    constructor() { super(ScriptType.POWERSHELL); }
+    getExtension() {
+        return 'ps1';
+    }
 }
 
 class BashScript extends Script {
@@ -153,17 +146,21 @@ set -euxo pipefail
     COMMAND_CONTENT = '%s';
     DELETE_COMMAND_CONTENT = 'rm -f "%s"';
 
-    constructor() { super(ScriptType.BASH); }
+    getExtension() {
+        return 'sh';
+    }
 }
 
 class TextScript extends Script {
 
     // Default templates data members defined in Script base class are enough
 
-    constructor() { super(ScriptType.TEXT); }
-
     deleteFile(filename) {
         // we override this function with a no-op
         // delete commands would not make sense in a text file.
+    }
+
+    getExtension() {
+        return 'txt';
     }
 }
