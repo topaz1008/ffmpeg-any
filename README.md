@@ -38,7 +38,7 @@ Options
    $> ffmpeg-any --delete-source
    ```
   
-* out - specify a different extension for the output files (default is mp4)
+* out - specify a different extension for the output files (default is `mp4`)
    ```
    $> ffmpeg-any --out="mkv"
    ```
@@ -48,7 +48,7 @@ Options
    $> ffmpeg-any --script-type="bash"
    ```
 
-* extensions - override the default supported extensions: default is (webm|mkv|wmv|flv|m4v|mov|mpg|ts|avi|rm)
+* extensions - override the default supported extensions: default is `(webm|mkv|wmv|flv|m4v|mov|mpg|mpeg|ts|avi|rm|mp4)`
    ```
    $> ffmpeg-any --extensions="mkv|webm"
    ```
