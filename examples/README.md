@@ -49,7 +49,7 @@ export class ScriptFactory {
 }
 ```
 ```javascript
-// Step 2, 3
+// Step 2, 3, 4
 class TextScript extends Script {
 
     SCRIPT_CONTENT = '%s';
