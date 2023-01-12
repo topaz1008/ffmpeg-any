@@ -3,7 +3,7 @@ import fs from 'fs';
 import { EOL } from 'os'
 
 /**
- * Helper class that deals with script types and extensions.
+ * Helper class that deals with script types.
  */
 export class ScriptType {
     static #POWERSHELL = 'powershell';
