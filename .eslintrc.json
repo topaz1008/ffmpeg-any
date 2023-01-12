@@ -1,0 +1,82 @@
+{
+    "env": {
+        "node": true,
+        "es2021": true
+    },
+    "globals": {},
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-bitwise": "error",
+        "curly": ["error", "all"],
+        "eqeqeq": "error",
+        "guard-for-in": "error",
+        "wrap-iife": "error",
+        "no-use-before-define": ["error", {"functions": false, "classes": false}],
+        "new-cap": "error",
+        "no-caller": "error",
+        "no-empty": ["error", {"allowEmptyCatch": true}],
+        "no-new": "error",
+        "no-undef": "error",
+        "quotes": ["error", "single"],
+        "camelcase": "error",
+        "no-extend-native": "error",
+        "no-unused-vars": "off",
+        "complexity": ["error", 8],
+        "max-params": ["error", 4],
+        "max-len": ["error", 120],
+        "indent": ["error", 4, {"SwitchCase": 1}],
+        "max-depth": ["error", 3],
+        "max-statements": ["error", 15],
+        "comma-style": ["error", "last"],
+        "no-shadow": "error",
+        "dot-notation": ["error", { "allowPattern": "^[a-z]*(-[a-z]*)*$" }],
+        "no-with": "error",
+        "no-trailing-spaces": "error",
+        "keyword-spacing": ["error", {}],
+        "space-infix-ops": "error",
+        "space-unary-ops": [
+            "error",
+            {
+                "nonwords": true,
+                "overrides": {
+                    "++": false,
+                    "--": false,
+                    "+": false,
+                    "-": false,
+                    "~": false,
+                    "!": false
+                }
+            }
+        ],
+        "operator-linebreak": ["error", "after"],
+        "no-implicit-coercion": [
+            "error",
+            {
+                "boolean": true,
+                "string": true,
+                "number": true
+            }
+        ],
+        "no-multiple-empty-lines": "error",
+        "no-multi-spaces": "error",
+        "key-spacing": [
+            "error",
+            {
+                "beforeColon": false,
+                "afterColon": true
+            }
+        ],
+        "no-underscore-dangle": "error",
+        "space-in-parens": ["error", "never"],
+        "array-bracket-spacing": ["error", "never", {}],
+        "no-mixed-spaces-and-tabs": "error",
+        "quote-props": ["error", "as-needed", {"keywords": true}],
+        "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
+        "consistent-this": ["error", "_this"],
+        "eol-last": "error"
+    }
+}

@@ -24,11 +24,14 @@
     },
     "scripts": {
         "link": "npm link",
+        "eslint": "npx eslint . *.js",
         "test": "jest"
     },
     "devDependencies": {
-        "@types/jest": "^24.3.1",
         "@jest/globals": "^29.3.1",
+        "@types/jest": "^24.3.1",
+        "eslint": "^8.31.0",
+        "eslint-config-google": "^0.14.0",
         "jest": "^29.3.1"
     }
 }
