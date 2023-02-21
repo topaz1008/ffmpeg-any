@@ -44,8 +44,8 @@ if (filesCounter > 0) {
     script.writeFileSync(OUTPUT_FILENAME);
 
 } else {
-    // Nothing to process, exit.
-    logError('No video files to process. exiting...');
+    // Nothing was processed, exit.
+    logWarn('No video files to process. exiting...');
 }
 
 ////////////////
@@ -62,7 +62,7 @@ function processDirectories(directories) {
             // For each file in dir
             if (opts.exclude !== null && opts.exclude.test(files[j])) {
                 // If this filename is excluded then skip it
-                logWarn(`Skipping file "${files[j]}", its excluded by pattern: ${opts.exclude}`);
+                logWarn(`Skipping file "${files[j]}", it is excluded by pattern: ${opts.exclude}`);
                 continue;
             }
 
@@ -81,18 +81,14 @@ function processDirectories(directories) {
 }
 
 function getDirectories(dir) {
-    return fs.readdirSync(dir).map(function (name) {
-        return path.join(dir, name);
-
-    }).filter(function (name) {
-        return fs.lstatSync(name).isDirectory();
-    });
+    return fs.readdirSync(dir)
+        .map(name => path.join(dir, name))
+        .filter(name => fs.lstatSync(name).isDirectory());
 }
 
 function readSupportedFilesSync(dir) {
-    return fs.readdirSync(dir).filter(function (filename) {
-        return opts.supportedExtensions.test(filename);
-    })
+    return fs.readdirSync(dir)
+        .filter(name => opts.supportedExtensions.test(name));
 }
 
 function getOutputFilename(input) {

@@ -10,7 +10,7 @@ export class Options {
     #outputExtension = 'mp4'; // Default output extension
     #subDirectoryMode = false; // Should process subdirectories as well?
     #outputScriptType = ScriptType.POWERSHELL; // Script type (default is powershell)
-    #exclude = null;
+    #exclude = null; // A regex pattern to exclude from processing
 
     constructor(argv) {
         const options = minimist(argv.slice(2));
