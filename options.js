@@ -1,5 +1,3 @@
-import { format } from 'util';
-
 import minimist from 'minimist';
 
 import { ScriptType } from './script-output.js';
@@ -12,6 +10,7 @@ export class Options {
     #outputExtension = 'mp4'; // Default output extension
     #subDirectoryMode = false; // Should process subdirectories as well?
     #outputScriptType = ScriptType.POWERSHELL; // Script type (default is powershell)
+    #exclude = null;
 
     constructor(argv) {
         const options = minimist(argv.slice(2));
@@ -36,8 +35,11 @@ export class Options {
             this.#outputExtension = options['out'];
         }
         if (this.#isNotEmptyString(options['extensions'])) {
-            const regex = format('\\.(%s)$', options['extensions']);
+            const regex = `\\.(${options['extensions']})$`;
             this.#supportedExtensions = new RegExp(regex, 'i');
+        }
+        if (this.#isNotEmptyString(options['exclude'])) {
+            this.#exclude = new RegExp(`${options['exclude']}`, 'i');
         }
     }
 
@@ -73,5 +75,9 @@ export class Options {
 
     get outputScriptType() {
         return this.#outputScriptType;
+    }
+
+    get exclude() {
+        return this.#exclude;
     }
 }

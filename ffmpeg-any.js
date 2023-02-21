@@ -60,6 +60,12 @@ function processDirectories(directories) {
 
         for (let j = 0; j < files.length; j++) {
             // For each file in dir
+            if (opts.exclude !== null && opts.exclude.test(files[j])) {
+                // If this filename is excluded then skip it
+                logWarn(`Skipping file "${files[j]}", its excluded by pattern: ${opts.exclude}`);
+                continue;
+            }
+
             const filepath = path.join(directories[i], files[j]);
 
             script.addCommand(ffmpegGetCommand(filepath));
