@@ -48,8 +48,8 @@ Options
    $> ffmpeg-any --script-type="bash"
    ```
   
-* exclude - specify a regex pattern to exclude for processing (this regex will be tested against the filenames).
-this example regex will exclude any file names matching this regex; i.e. `videofile.*`
+* exclude - specify a regex pattern to exclude from processing (this regex will be tested against the filenames).
+this example regex will exclude any filenames matching the following pattern; i.e. files starting with `videofile` and have any extension.
    ```
    $> ffmpeg-any --exclude="^(videofile\.(.*))$"
    ```
