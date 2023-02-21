@@ -5,7 +5,7 @@ A command line tool that batch processes video files and directories with [ffmpe
 
 Supports outputting powershell, batch and bash scripts; or a simple text file. For use with Windows or Mac\UNIX.
 
-This script DOES NOT make any changes to your files, it only creates a script with ffmpeg commands.
+This script **DOES NOT** make any changes to your files, it only creates a script with ffmpeg commands.
 
 The resulting script will stop processing files if it encounters any errors. example output scripts can be found [HERE](https://github.com/topaz1008/ffmpeg-any/tree/master/examples)
 
