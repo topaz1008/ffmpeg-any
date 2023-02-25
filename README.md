@@ -33,12 +33,22 @@ Options
    $> ffmpeg-any --command="-c:v libx264 -crf 21 -c:a aac -b:a 128k"
    ```
 
+* recursive - recursively process all subdirectories in the current working directory.
+   ```
+   $> ffmpeg-any --recursive
+   ```
+
 * delete-source - will delete the source files after successful conversion (default is to keep them)
    ```
    $> ffmpeg-any --delete-source
    ```
+
+* extensions - override the default supported (processed) extensions: default is `(webm|mkv|wmv|flv|m4v|mov|mpg|mpeg|ts|avi|rm|mp4)` i.e all.
+   ```
+   $> ffmpeg-any --extensions="mkv|webm"
+   ```
   
-* out - specify a different extension for the output files (default is `mp4`)
+* out - specify a different extension (container) for the output files (default is `mp4`)
    ```
    $> ffmpeg-any --out="mkv"
    ```
@@ -52,16 +62,6 @@ Options
 this example regex will exclude any filenames matching the following pattern; i.e. files starting with `videofile` and have any extension.
    ```
    $> ffmpeg-any --exclude="^(videofile\.(.*))$"
-   ```
-
-* extensions - override the default supported extensions: default is `(webm|mkv|wmv|flv|m4v|mov|mpg|mpeg|ts|avi|rm|mp4)`
-   ```
-   $> ffmpeg-any --extensions="mkv|webm"
-   ```
-  
-* recursive - recursively process all subdirectories in the current working directory.
-   ```
-   $> ffmpeg-any --recursive
    ```
 
 Usage examples
