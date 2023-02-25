@@ -6,8 +6,8 @@ import { format } from 'util';
 
 import chalk from 'chalk';
 
-import { Options } from './options.js';
-import { ScriptFactory } from './script-output.js';
+import { Options } from './src/options.js';
+import { ScriptFactory } from './src/script-output.js';
 
 const OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename (no extension)
 
@@ -36,8 +36,8 @@ if (opts.recursive === false) {
 } else {
     // Convert AsyncGenerator to array
     const files = [];
-    for await (const f of walkDirectory(cwd)) {
-        files.push(f);
+    for await (const filename of walkDirectory(cwd)) {
+        files.push(filename);
     }
 
     filesCounter = processFiles(files);
@@ -64,7 +64,7 @@ function processFiles(files) {
         const filename = path.basename(filepath);
         if (opts.isExcluded(filename)) {
             // If this filename is excluded then skip it
-            logWarn(`Skipping file "${filename}", it is excluded`);
+            logWarn(`Skipping file "${filename}" it is excluded`);
             continue;
         }
 
@@ -99,7 +99,7 @@ async function* walkDirectory(dir) {
 function getOutputFilename(input) {
 
     function formatFilenameWithExtension(name, extension) {
-        return format('%s.%s', name, extension);
+        return `${name}.${extension}`;
     }
 
     // Strip extension
@@ -110,7 +110,7 @@ function getOutputFilename(input) {
 
     // If input and output extension is the same we need to
     // change the output filename.
-    const extensionRegex = new RegExp(format('\\.%s$', opts.outputExtension), 'i');
+    const extensionRegex = new RegExp(`\\.${opts.outputExtension}$`, 'i');
     if (extensionRegex.test(input)) {
 
         let i = 1;
@@ -130,19 +130,19 @@ function getOutputFilename(input) {
 }
 
 function ffmpegGetCommand(input) {
-    const c = ['ffmpeg -hide_banner -i'];
+    const cmd = ['ffmpeg -hide_banner -i'];
     const outputName = getOutputFilename(input);
 
     // Absolute input file path
-    c.push(format('"%s"', input));
+    cmd.push(format('"%s"', input));
 
     // ffmpeg command string
-    c.push(opts.ffmpegCommand);
+    cmd.push(opts.ffmpegCommand);
 
     // Absolute output filepath, name and extension
-    c.push(format('"%s"', outputName));
+    cmd.push(format('"%s"', outputName));
 
-    return c.join(' ');
+    return cmd.join(' ');
 }
 
 function logInfo(msg) {

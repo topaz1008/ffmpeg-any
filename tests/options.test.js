@@ -1,7 +1,7 @@
 import { describe, expect, test, jest } from '@jest/globals';
 
-import { Options } from '../options.js';
-import { ScriptType } from '../script-output.js';
+import { Options } from '../src/options.js';
+import { ScriptType } from '../src/script-output.js';
 
 describe('Options module', () => {
     test('Default options', () => {

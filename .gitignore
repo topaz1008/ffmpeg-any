@@ -3,8 +3,10 @@
 /coverage
 /temp
 
-/run-ffmpeg.*
+# Auto-generated files
+run-ffmpeg.*
 npm-debug.log
 tmp.js
 
+# Dummy video files
 *.mkv
