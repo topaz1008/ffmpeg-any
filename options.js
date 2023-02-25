@@ -8,7 +8,7 @@ export class Options {
     #deleteSource = false; // Delete source files?
     #ffmpegCommand = '-codec copy'; // Default ffmpeg command
     #outputExtension = 'mp4'; // Default output extension
-    #subDirectoryMode = false; // Should process subdirectories as well?
+    #recursive = false; // Should process subdirectories recursively?
     #outputScriptType = ScriptType.POWERSHELL; // Script type (default is powershell)
     #exclude = null; // A regex pattern to exclude from processing
 
@@ -19,8 +19,8 @@ export class Options {
         if (this.#isTruthy(options['delete-source'])) {
             this.#deleteSource = true;
         }
-        if (this.#isTruthy(options['sub'])) {
-            this.#subDirectoryMode = true;
+        if (this.#isTruthy(options['recursive'])) {
+            this.#recursive = true;
         }
 
         // Only change the script type if it was passed AND it's valid.
@@ -43,15 +43,6 @@ export class Options {
         }
     }
 
-    // Private helpers
-    #isTruthy(v) {
-        return (v === true || v === 'true');
-    }
-
-    #isNotEmptyString(s) {
-        return (typeof s === 'string' && s !== '');
-    }
-
     // Public getters
     get supportedExtensions() {
         return this.#supportedExtensions;
@@ -69,8 +60,8 @@ export class Options {
         return this.#outputExtension;
     }
 
-    get subDirectoryMode() {
-        return this.#subDirectoryMode;
+    get recursive() {
+        return this.#recursive;
     }
 
     get outputScriptType() {
@@ -79,5 +70,25 @@ export class Options {
 
     get exclude() {
         return this.#exclude;
+    }
+
+    // Public methods
+    /**
+     * Checks if a file is excluded from processing.
+     *
+     * @param filename {string}
+     * @returns {boolean}
+     */
+    isExcluded = (filename) => {
+        return (this.#exclude !== null && this.#exclude.test(filename));
+    };
+
+    // Private helpers
+    #isTruthy(v) {
+        return (v === true || v === 'true');
+    }
+
+    #isNotEmptyString(s) {
+        return (typeof s === 'string' && s !== '');
     }
 }

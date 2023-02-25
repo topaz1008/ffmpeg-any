@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
+import fs, { promises as fss } from 'fs';
 import path from 'path';
 import { format } from 'util';
 
@@ -15,8 +15,8 @@ const opts = new Options(process.argv);
 const script = ScriptFactory.create(opts.outputScriptType);
 
 // Command line options
-if (opts.subDirectoryMode === true) {
-    logInfo('Subdirectories mode.');
+if (opts.recursive === true) {
+    logInfo('Recursive mode.');
 }
 logInfo(`Script output set to "${opts.outputScriptType}".`);
 if (opts.deleteSource === true) {
@@ -29,14 +29,18 @@ logInfo(`Output extension is: "${opts.outputExtension}"`);
 const cwd = process.cwd();
 
 let filesCounter;
-if (opts.subDirectoryMode === false) {
-    filesCounter = processDirectories([cwd]);
+if (opts.recursive === false) {
+    const files = readSupportedFilesSync(cwd);
+    filesCounter = processFiles(files);
 
 } else {
-    const directories = getDirectories(cwd);
+    // Convert AsyncGenerator to array
+    const files = [];
+    for await (const f of walkDirectory(cwd)) {
+        files.push(f);
+    }
 
-    // Process any files in cwd then scan all subdirectories.
-    filesCounter = processDirectories([cwd].concat(directories));
+    filesCounter = processFiles(files);
 }
 if (filesCounter > 0) {
     // Log file count and write the file
@@ -51,39 +55,28 @@ if (filesCounter > 0) {
 ////////////////
 // Functions  //
 ////////////////
-function processDirectories(directories) {
+function processFiles(files) {
     let processedFiles = 0;
 
-    for (let i = 0; i < directories.length; i++) {
-        // For each dir
-        const files = readSupportedFilesSync(directories[i]);
+    for (let i = 0; i < files.length; i++) {
+        // For each file
+        const filepath = files[i];
+        const filename = path.basename(filepath);
+        if (opts.isExcluded(filename)) {
+            // If this filename is excluded then skip it
+            logWarn(`Skipping file "${filename}", it is excluded`);
+            continue;
+        }
 
-        for (let j = 0; j < files.length; j++) {
-            // For each file in dir
-            if (opts.exclude !== null && opts.exclude.test(files[j])) {
-                // If this filename is excluded then skip it
-                logWarn(`Skipping file "${files[j]}", it is excluded by pattern: ${opts.exclude}`);
-                continue;
-            }
+        script.addCommand(ffmpegGetCommand(filepath));
+        processedFiles++;
 
-            const filepath = path.join(directories[i], files[j]);
-
-            script.addCommand(ffmpegGetCommand(filepath));
-            processedFiles++;
-
-            if (opts.deleteSource === true) {
-                script.deleteFile(filepath);
-            }
+        if (opts.deleteSource === true) {
+            script.deleteFile(filepath);
         }
     }
 
     return processedFiles;
-}
-
-function getDirectories(dir) {
-    return fs.readdirSync(dir)
-        .map(name => path.join(dir, name))
-        .filter(name => fs.lstatSync(name).isDirectory());
 }
 
 function readSupportedFilesSync(dir) {
@@ -91,9 +84,21 @@ function readSupportedFilesSync(dir) {
         .filter(name => opts.supportedExtensions.test(name));
 }
 
+async function* walkDirectory(dir) {
+    for await (const d of await fss.opendir(dir)) {
+        const p = path.join(dir, d.name);
+        if (d.isDirectory()) {
+            yield* walkDirectory(p);
+
+        } else if (d.isFile() && opts.supportedExtensions.test(p)) {
+            yield p;
+        }
+    }
+}
+
 function getOutputFilename(input) {
 
-    function formatFilename(name, extension) {
+    function formatFilenameWithExtension(name, extension) {
         return format('%s.%s', name, extension);
     }
 
@@ -101,7 +106,7 @@ function getOutputFilename(input) {
     const outputName = input.replace(opts.supportedExtensions, '');
 
     // Create output filename with new extension
-    let result = formatFilename(outputName, opts.outputExtension);
+    let result = formatFilenameWithExtension(outputName, opts.outputExtension);
 
     // If input and output extension is the same we need to
     // change the output filename.
@@ -112,7 +117,7 @@ function getOutputFilename(input) {
         do {
             // Append (i) to the filename until an available filename is found.
             const newName = `${outputName}_(${i})`;
-            result = formatFilename(newName, opts.outputExtension);
+            result = formatFilenameWithExtension(newName, opts.outputExtension);
             i++;
 
         } while (fs.existsSync(result));
@@ -153,6 +158,9 @@ function logError(msg) {
 }
 
 function log(msg) {
-    // TODO: Add logging?
-    console.log(msg);
+    // TODO: Add file logging?
+    const now = (new Date()).toLocaleString()
+        .replace(' ', ' ');
+
+    console.log(format('[%s] - %s', now, msg));
 }

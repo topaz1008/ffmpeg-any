@@ -59,9 +59,9 @@ this example regex will exclude any filenames matching the following pattern; i.
    $> ffmpeg-any --extensions="mkv|webm"
    ```
   
-* sub - also process any subdirectories in the current working directory for any video files (only 1 level deep)
+* recursive - recursively process all subdirectories in the current working directory.
    ```
-   $> ffmpeg-any --sub
+   $> ffmpeg-any --recursive
    ```
 
 Usage examples
@@ -79,7 +79,7 @@ Usage examples
 
 2. This will convert all files in the current working directory and any of its sub-folders to x264 mp4 with aac audio while deleting original files:
    ```
-   $> ffmpeg-any --delete-source --sub --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
+   $> ffmpeg-any --delete-source --recursive --command="-c:v libx264 -preset slow -crf 21 -c:a aac -b:a 128k"
    ```
 
    The pseudo output for a single file will be:
