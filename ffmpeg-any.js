@@ -15,11 +15,11 @@ const opts = new Options(process.argv);
 const script = ScriptFactory.create(opts.outputScriptType);
 
 // Command line options
-if (opts.recursive === true) {
+if (opts.recursive) {
     logInfo('Recursive mode.');
 }
 logInfo(`Script output set to "${opts.outputScriptType}".`);
-if (opts.deleteSource === true) {
+if (opts.deleteSource) {
     logWarn('Deleting source files.');
 }
 logInfo(`Running command: "${opts.ffmpegCommand}"`);
@@ -29,7 +29,7 @@ logInfo(`Output extension is: "${opts.outputExtension}"`);
 const cwd = process.cwd();
 
 let filesCounter;
-if (opts.recursive === false) {
+if (!opts.recursive) {
     const files = readSupportedFilesSync(cwd);
     filesCounter = processFiles(files);
 
@@ -71,7 +71,7 @@ function processFiles(files) {
         script.addCommand(ffmpegGetCommand(filepath));
         processedFiles++;
 
-        if (opts.deleteSource === true) {
+        if (opts.deleteSource) {
             script.deleteFile(filepath);
         }
     }
@@ -81,7 +81,7 @@ function processFiles(files) {
 
 function readSupportedFilesSync(dir) {
     return fs.readdirSync(dir)
-        .filter(name => opts.supportedExtensions.test(name));
+        .filter(filename => opts.supportedExtensions.test(filename));
 }
 
 async function* walkDirectory(dir) {
@@ -131,7 +131,6 @@ function getOutputFilename(input) {
 
 function ffmpegGetCommand(input) {
     const cmd = ['ffmpeg -hide_banner -i'];
-    const outputName = getOutputFilename(input);
 
     // Absolute input file path
     cmd.push(format('"%s"', input));
@@ -140,6 +139,7 @@ function ffmpegGetCommand(input) {
     cmd.push(opts.ffmpegCommand);
 
     // Absolute output filepath, name and extension
+    const outputName = getOutputFilename(input);
     cmd.push(format('"%s"', outputName));
 
     return cmd.join(' ');
@@ -160,6 +160,7 @@ function logError(msg) {
 function log(msg) {
     // TODO: Add file logging?
     const now = (new Date()).toLocaleString()
+        // No idea where this NBSP comes from
         .replace(' ', ' ');
 
     console.log(format('[%s] - %s', now, msg));

@@ -1,21 +1,23 @@
-import { format } from 'util';
 import fs from 'fs';
+import { format } from 'util';
 import { EOL } from 'os'
 
 /**
  * Helper class that deals with script types.
  */
 export class ScriptType {
+    // Static valid script type values
     static #POWERSHELL = 'powershell';
     static #BATCH = 'batch';
     static #BASH = 'bash';
     static #TEXT = 'text';
 
     constructor() {
+        // 'Private' constructor
         throw new Error('ScriptType class is static, it should not be instantiated directly.');
     }
 
-    // These getters make these constants "public static const"
+    // These getters make the static constants "public static const"
     static get POWERSHELL() { return this.#POWERSHELL; }
     static get BATCH() { return this.#BATCH; }
     static get BASH() { return this.#BASH; }
@@ -39,6 +41,7 @@ export class ScriptType {
  */
 export class ScriptFactory {
     constructor() {
+        // 'Private' constructor
         throw new Error('ScriptFactory class is static, it should not be instantiated directly.');
     }
 

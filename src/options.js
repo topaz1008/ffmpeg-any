@@ -12,6 +12,11 @@ export class Options {
     #outputScriptType = ScriptType.POWERSHELL; // Script type (default is powershell)
     #exclude = null; // A regex pattern to exclude from processing
 
+    /**
+     * Creates an Options instance from the command line arguments vector.
+     *
+     * @param argv {String[]} The arguments vector 'process.argv'
+     */
     constructor(argv) {
         const options = minimist(argv.slice(2));
 
@@ -73,6 +78,7 @@ export class Options {
     }
 
     // Public methods
+
     /**
      * Checks if a file is excluded from processing.
      *
@@ -84,11 +90,25 @@ export class Options {
     };
 
     // Private helpers
-    #isTruthy(v) {
-        return (v === true || v === 'true');
-    }
 
-    #isNotEmptyString(s) {
+    /**
+     * Check if 'v' is truthy.
+     * i.e. boolean or string boolean
+     *
+     * @param v {*}
+     * @returns {boolean}
+     */
+    #isTruthy = (v) => {
+        return (v === true || v === 'true');
+    };
+
+    /**
+     * Check if 's' is a string AND is not empty string.
+     *
+     * @param s {*}
+     * @returns {boolean}
+     */
+    #isNotEmptyString = (s) => {
         return (typeof s === 'string' && s !== '');
-    }
+    };
 }
