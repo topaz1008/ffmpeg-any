@@ -13,7 +13,7 @@ How to add a new script type
    2. `COMMAND_CONTENT` - the template for a single command (e.g. a single ffmpeg command, or a single delete command)
    3. `DELETE_COMMAND_CONTENT` - the template for a delete command.
 3. The class MUST also implement a `getExtension()` method that returns the file extension for the script type. 
-4. You can optionally override `deleteFile()`, `addCommand()` `writeFileSync()` functions from the `Script` base class if you need to. 
+4. You can optionally override `deleteFile()`, `addCommand()` `writeScriptFileSync()` functions from the `Script` base class if you need to. 
 
 Here is an example of creating a simple text output file.
 

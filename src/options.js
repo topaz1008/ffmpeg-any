@@ -2,6 +2,9 @@ import minimist from 'minimist';
 
 import { ScriptType } from './script-output.js';
 
+/**
+ * Represents all the command line options in an easy-to-use object.
+ */
 export class Options {
     // Private members
     #supportedExtensions = /\.(webm|mkv|wmv|flv|m4v|mov|mpg|mpeg|ts|avi|rm|mp4)$/i;

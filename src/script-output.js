@@ -89,7 +89,7 @@ class Script {
         return '';
     }
 
-    writeFileSync(filename) {
+    writeScriptFileSync(filename) {
         const extension = this.getExtension();
         const outputName = format('%s.%s', filename, extension);
 
