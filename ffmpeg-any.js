@@ -171,8 +171,10 @@ function ffmpegGetCommand(input) {
     cmd.push(opts.ffmpegCommand);
 
     // Absolute output filepath, name and extension
-    const outputName = getOutputFilename(input);
-    cmd.push(format('"%s"', outputName));
+    if (!/%(.*)\.(jpg|jpeg|png|tiff)/.test(opts.ffmpegCommand)) {
+        const outputName = getOutputFilename(input);
+        cmd.push(format('"%s"', outputName));
+    }
 
     return cmd.join(' ');
 }
