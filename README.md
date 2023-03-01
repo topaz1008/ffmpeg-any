@@ -33,7 +33,7 @@ Options
    $> ffmpeg-any --command="-c:v libx264 -crf 21 -c:a aac -b:a 128k"
    ```
 
-* recursive - recursively process all subdirectories in the current working directory.
+* recursive - recursively process all subdirectories in the current working directory. (default is to only process `cwd` for files)
    ```
    $> ffmpeg-any --recursive
    ```
@@ -59,9 +59,9 @@ Options
    ```
   
 * exclude - specify a regex pattern to exclude from processing (this regex will be tested against the filenames).
-this example regex will exclude any filenames matching the following pattern; i.e. files starting with `videofile` and have any extension.
+this example regex will exclude any filenames matching the following pattern; i.e. filename named `foo` and have any extension.
    ```
-   $> ffmpeg-any --exclude="^(videofile\.(.*))$"
+   $> ffmpeg-any --exclude="^(foo\.(.*))$"
    ```
 
 Usage examples
