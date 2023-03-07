@@ -115,7 +115,7 @@ async function* walkDirectory(dir) {
 }
 
 /**
- * Gets or calculated a valid new output filename and path.
+ * Gets or calculates a valid new output filename and path.
  * Also deals with the case where input and output extension is the same
  * thus needing to change the output to a new valid filename.
  *
