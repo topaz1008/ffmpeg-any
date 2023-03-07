@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { format } from 'util';
 import { EOL } from 'os'
 
 /**
@@ -57,6 +56,11 @@ export class ScriptFactory {
     }
 }
 
+// The replacement tokens for the script templates
+const TOKEN_SCRIPT = '{SCRIPT}';
+const TOKEN_COMMAND = '{COMMAND}';
+const TOKEN_DELETE_COMMAND = '{DELETE_COMMAND}';
+
 /**
  * Base script class, all script types inherit from this class.
  * the extending class MUST implement the following data members.
@@ -73,16 +77,20 @@ export class ScriptFactory {
  */
 class Script {
     commands = [];
-    SCRIPT_CONTENT = '%s' + EOL;
-    COMMAND_CONTENT = '%s';
-    DELETE_COMMAND_CONTENT = '';
+    SCRIPT_CONTENT = TOKEN_SCRIPT + EOL;
+    COMMAND_CONTENT = TOKEN_COMMAND;
+    DELETE_COMMAND_CONTENT = TOKEN_DELETE_COMMAND;
 
     addCommand(command) {
-        this.commands.push(format(this.COMMAND_CONTENT, command));
+        this.commands.push(
+            this.COMMAND_CONTENT.replace(TOKEN_COMMAND, command)
+        );
     }
 
     deleteFile(filename) {
-        this.addCommand(format(this.DELETE_COMMAND_CONTENT, filename));
+        this.addCommand(
+            this.DELETE_COMMAND_CONTENT.replace(TOKEN_DELETE_COMMAND, filename)
+        );
     }
 
     getExtension() {
@@ -90,26 +98,24 @@ class Script {
     }
 
     writeScriptFileSync(filename) {
-        const extension = this.getExtension();
-        const outputName = format('%s.%s', filename, extension);
+        const outputName = `${filename}.${this.getExtension()}`;
 
         // Delete self (the script)
         this.deleteFile(outputName);
 
-        let script = this.commands.join(EOL);
-        script = format(this.SCRIPT_CONTENT, script);
+        const script = this.SCRIPT_CONTENT.replace(TOKEN_SCRIPT, this.commands.join(EOL));
 
         fs.writeFileSync(outputName, script);
     }
 }
 
 class BatchScript extends Script {
-    SCRIPT_CONTENT = `%s
+    SCRIPT_CONTENT = `${TOKEN_SCRIPT}
 :error
 exit /b %errorlevel%
 `;
-    COMMAND_CONTENT = '%s || goto :error';
-    DELETE_COMMAND_CONTENT = 'del "%s"';
+    COMMAND_CONTENT = `${TOKEN_COMMAND} || goto :error`;
+    DELETE_COMMAND_CONTENT = `del "${TOKEN_DELETE_COMMAND}"`;
 
     getExtension() {
         return 'bat';
@@ -127,12 +133,12 @@ class PowershellScript extends Script {
     }
 }
 
-%s
+${TOKEN_SCRIPT}
 `;
     COMMAND_CONTENT = `Invoke-Call -ScriptBlock {
-    %s
+    ${TOKEN_COMMAND}
 } -ErrorAction Stop`;
-    DELETE_COMMAND_CONTENT = 'Remove-Item -Force "%s"';
+    DELETE_COMMAND_CONTENT = `Remove-Item -Force "${TOKEN_DELETE_COMMAND}"`;
 
     getExtension() {
         return 'ps1';
@@ -144,10 +150,10 @@ class BashScript extends Script {
     // @link https://stackoverflow.com/a/2871034/1572422
     SCRIPT_CONTENT = `#!/bin/bash
 set -euxo pipefail
-%s
+${TOKEN_SCRIPT}
 `;
-    COMMAND_CONTENT = '%s';
-    DELETE_COMMAND_CONTENT = 'rm -f "%s"';
+    COMMAND_CONTENT = `${TOKEN_COMMAND}`;
+    DELETE_COMMAND_CONTENT = `rm -f "${TOKEN_DELETE_COMMAND}"`;
 
     getExtension() {
         return 'sh';
