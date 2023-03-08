@@ -9,7 +9,8 @@ import chalk from 'chalk';
 import { Options } from './src/options.js';
 import { ScriptFactory } from './src/script-output.js';
 
-const OUTPUT_FILENAME = 'run-ffmpeg'; // Output script filename (no extension)
+// Output script filename (no extension)
+const OUTPUT_FILENAME = 'run-ffmpeg';
 
 const opts = new Options(process.argv);
 const script = ScriptFactory.create(opts.outputScriptType);
@@ -73,11 +74,17 @@ function processFiles(files) {
             continue;
         }
 
-        script.addCommand(ffmpegGetCommand(filepath));
+        const outputFile = getOutputFilename(filepath);
+        const ffmpegCommand = ffmpegGetCommand(filepath, outputFile);
+        const info = {
+            inputFile: filename,
+            outputFile: outputFile
+        };
+        script.addCommand(ffmpegCommand, info);
         processedFiles++;
 
         if (opts.deleteSource) {
-            script.deleteFile(filepath);
+            script.deleteFile(filepath, info);
         }
     }
 
@@ -159,9 +166,10 @@ function getOutputFilename(input) {
  * Generates the ffmpeg command string for a given input.
  *
  * @param input {string}
+ * @param output {string}
  * @returns {string}
  */
-function ffmpegGetCommand(input) {
+function ffmpegGetCommand(input, output) {
     const cmd = ['ffmpeg -hide_banner -i'];
 
     // Absolute input file path
@@ -171,8 +179,7 @@ function ffmpegGetCommand(input) {
     cmd.push(opts.ffmpegCommand);
 
     // Absolute output filepath, name and extension
-    const outputName = getOutputFilename(input);
-    cmd.push(format('"%s"', outputName));
+    cmd.push(format('"%s"', output));
 
     return cmd.join(' ');
 }

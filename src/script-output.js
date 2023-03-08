@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { EOL } from 'os'
+import { EOL } from 'os';
 
 /**
  * Helper class that deals with script types.
@@ -17,10 +17,21 @@ export class ScriptType {
     }
 
     // These getters make the static constants "public static const"
-    static get POWERSHELL() { return this.#POWERSHELL; }
-    static get BATCH() { return this.#BATCH; }
-    static get BASH() { return this.#BASH; }
-    static get TEXT() { return this.#TEXT; }
+    static get POWERSHELL() {
+        return this.#POWERSHELL;
+    }
+
+    static get BATCH() {
+        return this.#BATCH;
+    }
+
+    static get BASH() {
+        return this.#BASH;
+    }
+
+    static get TEXT() {
+        return this.#TEXT;
+    }
 
     static isValid(type) {
         switch (type) {
@@ -30,7 +41,8 @@ export class ScriptType {
             case this.TEXT:
                 return true;
 
-            default: return false;
+            default:
+                return false;
         }
     }
 }
@@ -46,12 +58,17 @@ export class ScriptFactory {
 
     static create(type) {
         switch (type) {
-            case ScriptType.POWERSHELL: return new PowershellScript();
-            case ScriptType.BATCH: return new BatchScript();
-            case ScriptType.BASH: return new BashScript();
-            case ScriptType.TEXT: return new TextScript();
+            case ScriptType.POWERSHELL:
+                return new PowershellScript();
+            case ScriptType.BATCH:
+                return new BatchScript();
+            case ScriptType.BASH:
+                return new BashScript();
+            case ScriptType.TEXT:
+                return new TextScript();
 
-            default: throw new Error(`Invalid script type "${type}"`);
+            default:
+                throw new Error(`Invalid script type "${type}"`);
         }
     }
 }
@@ -60,6 +77,8 @@ export class ScriptFactory {
 const TOKEN_SCRIPT = '{SCRIPT}';
 const TOKEN_COMMAND = '{COMMAND}';
 const TOKEN_DELETE_COMMAND = '{DELETE_COMMAND}';
+const TOKEN_INPUT_FILE = 'INPUT_FILE}';
+const TOKEN_OUTPUT_FILE = '{OUTPUT_FILE}';
 
 /**
  * Base script class, all script types inherit from this class.
@@ -81,15 +100,19 @@ class Script {
     COMMAND_CONTENT = TOKEN_COMMAND;
     DELETE_COMMAND_CONTENT = TOKEN_DELETE_COMMAND;
 
-    addCommand(command) {
+    addCommand(command, info) {
+        info = info || {};
+
         this.commands.push(
-            this.COMMAND_CONTENT.replace(TOKEN_COMMAND, command)
+            this.COMMAND_CONTENT.replaceAll(TOKEN_COMMAND, command)
+            .replaceAll(TOKEN_INPUT_FILE, info.inputFile || '')
+            .replaceAll(TOKEN_OUTPUT_FILE, info.outputFile || '')
         );
     }
 
-    deleteFile(filename) {
+    deleteFile(filename, info) {
         this.addCommand(
-            this.DELETE_COMMAND_CONTENT.replace(TOKEN_DELETE_COMMAND, filename)
+            this.DELETE_COMMAND_CONTENT.replace(TOKEN_DELETE_COMMAND, filename), info
         );
     }
 
@@ -135,10 +158,12 @@ class PowershellScript extends Script {
 
 ${TOKEN_SCRIPT}
 `;
-    COMMAND_CONTENT = `Invoke-Call -ScriptBlock {
+    COMMAND_CONTENT = `
+Invoke-Call -ScriptBlock {
+    Write-Output "Running command: ${TOKEN_COMMAND}"
     ${TOKEN_COMMAND}
 } -ErrorAction Stop`;
-    DELETE_COMMAND_CONTENT = `Remove-Item -Force "${TOKEN_DELETE_COMMAND}"`;
+    DELETE_COMMAND_CONTENT = `"Remove-Item -Force "${TOKEN_DELETE_COMMAND}"`;
 
     getExtension() {
         return 'ps1';
